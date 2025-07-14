@@ -29,7 +29,7 @@ export default function AlertSystem({
   }, [trafficData, userLocation])
 
   const checkNotificationPermission = async () => {
-    if ("Notification" in window) {
+    if (typeof window !== "undefined" && "Notification" in window) {
       if (Notification.permission === "granted") {
         setNotificationsEnabled(true)
       } else if (Notification.permission !== "denied") {
@@ -99,7 +99,7 @@ export default function AlertSystem({
   }
 
   const sendNotification = (alert: any) => {
-    if ("Notification" in window && Notification.permission === "granted") {
+    if (typeof window !== "undefined" && "Notification" in window && Notification.permission === "granted") {
       new Notification(alert.title, {
         body: alert.message,
         icon: "/favicon.ico",
@@ -109,7 +109,7 @@ export default function AlertSystem({
     }
 
     // Vibration for mobile
-    if ("vibrate" in navigator) {
+    if (typeof navigator !== "undefined" && "vibrate" in navigator) {
       navigator.vibrate([200, 100, 200])
     }
   }

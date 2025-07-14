@@ -115,12 +115,12 @@ export default function SmartTrafficMonitor() {
     generateEnhancedTrafficData(newLocation)
 
     // Enhanced haptic feedback
-    if ("vibrate" in navigator) {
+    if (typeof navigator !== "undefined" && "vibrate" in navigator) {
       navigator.vibrate([100, 50, 100, 50, 200])
     }
 
     // Voice feedback if enabled
-    if (userPreferences.voiceEnabled && "speechSynthesis" in window) {
+    if (userPreferences.voiceEnabled && typeof window !== "undefined" && "speechSynthesis" in window) {
       const utterance = new SpeechSynthesisUtterance("Location updated successfully")
       utterance.rate = 0.8
       utterance.pitch = 1.1
@@ -305,14 +305,14 @@ export default function SmartTrafficMonitor() {
               </div>
 
               <div className="flex items-center gap-3">
-                <VoiceCommands
+                {/* <VoiceCommands
                   isActive={isVoiceActive}
                   onToggle={setIsVoiceActive}
                   onCommand={(command) => {
                     // Handle voice commands
                     console.log("Voice command:", command)
                   }}
-                />
+                /> */}
 
                 <Button variant="outline" size="sm" className="bg-white/50 backdrop-blur-sm hover:bg-white/70">
                   <Share2 className="h-4 w-4 mr-2" />

@@ -17,7 +17,7 @@ export default function LocationTracker({ onLocationUpdate }: LocationTrackerPro
   const [watchId, setWatchId] = useState<number | null>(null)
 
   const startTracking = () => {
-    if (!navigator.geolocation) {
+    if (typeof navigator === "undefined" || !navigator.geolocation) {
       setError("Geolocation is not supported by this browser.")
       return
     }
@@ -27,7 +27,7 @@ export default function LocationTracker({ onLocationUpdate }: LocationTrackerPro
 
     const options = {
       enableHighAccuracy: true,
-      timeout: 10000,
+      timeout: 20000, // 20 seconds for better reliability
       maximumAge: 60000,
     }
 
@@ -42,7 +42,15 @@ export default function LocationTracker({ onLocationUpdate }: LocationTrackerPro
         onLocationUpdate(newLocation)
       },
       (error) => {
-        setError(`Error: ${error.message}`)
+        if (error.code === error.TIMEOUT) {
+          setError("Location request timed out. Please ensure location services are enabled and try again.")
+        } else if (error.code === error.PERMISSION_DENIED) {
+          setError("Location permission denied. Please allow location access in your browser settings.")
+        } else if (error.code === error.POSITION_UNAVAILABLE) {
+          setError("Location information is unavailable. Please try again later.")
+        } else {
+          setError(`Error: ${error.message}`)
+        }
         setIsTracking(false)
       },
       options,
@@ -59,7 +67,15 @@ export default function LocationTracker({ onLocationUpdate }: LocationTrackerPro
         onLocationUpdate(newLocation)
       },
       (error) => {
-        setError(`Error: ${error.message}`)
+        if (error.code === error.TIMEOUT) {
+          setError("Location update timed out. Please ensure location services are enabled and try again.")
+        } else if (error.code === error.PERMISSION_DENIED) {
+          setError("Location permission denied. Please allow location access in your browser settings.")
+        } else if (error.code === error.POSITION_UNAVAILABLE) {
+          setError("Location information is unavailable. Please try again later.")
+        } else {
+          setError(`Error: ${error.message}`)
+        }
       },
       options,
     )
@@ -68,7 +84,7 @@ export default function LocationTracker({ onLocationUpdate }: LocationTrackerPro
   }
 
   const stopTracking = () => {
-    if (watchId !== null) {
+    if (typeof navigator !== "undefined" && watchId !== null && navigator.geolocation) {
       navigator.geolocation.clearWatch(watchId)
       setWatchId(null)
     }
@@ -77,7 +93,7 @@ export default function LocationTracker({ onLocationUpdate }: LocationTrackerPro
 
   useEffect(() => {
     return () => {
-      if (watchId !== null) {
+      if (typeof navigator !== "undefined" && watchId !== null && navigator.geolocation) {
         navigator.geolocation.clearWatch(watchId)
       }
     }

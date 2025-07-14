@@ -18,6 +18,7 @@ export default function VoiceCommands({ isActive, onToggle, onCommand }: VoiceCo
   const recognitionRef = useRef<any>(null)
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
     // Check if Speech Recognition is supported
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
 
@@ -83,7 +84,7 @@ export default function VoiceCommands({ isActive, onToggle, onCommand }: VoiceCo
       commands[matchedCommand as keyof typeof commands]()
 
       // Voice feedback
-      if ("speechSynthesis" in window) {
+      if (typeof window !== "undefined" && "speechSynthesis" in window) {
         const utterance = new SpeechSynthesisUtterance(`Executing ${matchedCommand}`)
         utterance.rate = 0.8
         utterance.pitch = 1.1
@@ -91,7 +92,7 @@ export default function VoiceCommands({ isActive, onToggle, onCommand }: VoiceCo
       }
 
       // Haptic feedback
-      if ("vibrate" in navigator) {
+      if (typeof navigator !== "undefined" && "vibrate" in navigator) {
         navigator.vibrate([100, 50, 100])
       }
     }

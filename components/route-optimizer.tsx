@@ -148,7 +148,7 @@ export default function RouteOptimizer({
     onRouteSelect(route)
 
     // Vibration feedback
-    if ("vibrate" in navigator) {
+    if (typeof navigator !== "undefined" && "vibrate" in navigator) {
       navigator.vibrate([50, 100, 50])
     }
   }

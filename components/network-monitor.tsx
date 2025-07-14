@@ -11,9 +11,11 @@ interface NetworkMonitorProps {
 
 export default function NetworkMonitor({ onNetworkUpdate }: NetworkMonitorProps) {
   const [networkInfo, setNetworkInfo] = useState<any>(null)
-  const [isOnline, setIsOnline] = useState(navigator.onLine)
+  const [isOnline, setIsOnline] = useState(false)
 
   useEffect(() => {
+    if (typeof window === "undefined" || typeof navigator === "undefined") return;
+    setIsOnline(navigator.onLine);
     // Network Information API
     const updateNetworkInfo = () => {
       const connection =

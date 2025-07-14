@@ -55,7 +55,7 @@ export default function SocialTrafficReports({ reports, onReportsUpdate, userLoc
     setIsSubmitting(false)
 
     // Success feedback
-    if ("vibrate" in navigator) {
+    if (typeof navigator !== "undefined" && "vibrate" in navigator) {
       navigator.vibrate([100, 50, 100])
     }
   }
@@ -67,7 +67,7 @@ export default function SocialTrafficReports({ reports, onReportsUpdate, userLoc
     onReportsUpdate(updatedReports)
 
     // Haptic feedback
-    if ("vibrate" in navigator) {
+    if (typeof navigator !== "undefined" && "vibrate" in navigator) {
       navigator.vibrate([50])
     }
   }
